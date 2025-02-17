@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tzq.easystudy.mapper.HomeworkQuestionMapper">
+    <select id="selectHomeworkQuestion" parameterType="Long" resultType="com.tzq.easystudy.vo.HomeworkQuestionVo">
+        select q.id, type, content, answer, difficulty,hq.no,hq.score
+        from question q
+                 join homework_question hq on hq.question_id = q.id
+                 join homework h on h.id = hq.homework_id
+    </select>
+</mapper>

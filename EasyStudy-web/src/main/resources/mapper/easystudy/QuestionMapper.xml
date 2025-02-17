@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tzq.easystudy.mapper.QuestionMapper">
+    
+    <resultMap type="Question" id="QuestionResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="content"    column="content"    />
+        <result property="answer"    column="answer"    />
+        <result property="difficulty"    column="difficulty"    />
+        <result property="courseId"    column="course_id"    />
+    </resultMap>
+
+    <sql id="selectQuestionVo">
+        select id, type, content, answer, difficulty, course_id from question
+    </sql>
+
+    <select id="selectQuestionList" parameterType="Question" resultType="Question">
+        <include refid="selectQuestionVo"/>
+        <where>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="answer != null  and answer != ''"> and answer = #{answer}</if>
+            <if test="difficulty != null "> and difficulty = #{difficulty}</if>
+            <if test="courseId != null "> and course_id = #{courseId}</if>
+        </where>
+    </select>
+
+    <select id="selectQuestionVoList" parameterType="Question" resultType="QuestionVo">
+        select q.id, type, content, answer, difficulty, c.name course_name
+        from question q
+        join course c on q.course_id = c.id
+        <where>  
+            <if test="type != null "> and type = #{type}</if>
+            <if test="content != null  and contentnpm != ''"> and content = #{content}</if>
+            <if test="answer != null  and answer != ''"> and answer = #{answer}</if>
+            <if test="difficulty != null "> and difficulty = #{difficulty}</if>
+            <if test="courseId != null "> and course_id = #{courseId}</if>
+        </where>
+    </select>
+    
+    <select id="selectQuestionById" parameterType="Long" resultMap="QuestionResult">
+        <include refid="selectQuestionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertQuestion" parameterType="Question">
+        insert into question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="type != null">type,</if>
+            <if test="content != null">content,</if>
+            <if test="answer != null">answer,</if>
+            <if test="difficulty != null">difficulty,</if>
+            <if test="courseId != null">course_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="type != null">#{type},</if>
+            <if test="content != null">#{content},</if>
+            <if test="answer != null">#{answer},</if>
+            <if test="difficulty != null">#{difficulty},</if>
+            <if test="courseId != null">#{courseId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQuestion" parameterType="Question">
+        update question
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null">type = #{type},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="answer != null">answer = #{answer},</if>
+            <if test="difficulty != null">difficulty = #{difficulty},</if>
+            <if test="courseId != null">course_id = #{courseId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteQuestionById" parameterType="Long">
+        delete from question where id = #{id}
+    </delete>
+
+    <delete id="deleteQuestionByIds" parameterType="String">
+        delete from question where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
